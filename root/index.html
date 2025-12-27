@@ -2,57 +2,100 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Professional Resume Builder</title>
+<title>Professional Resume Builder – Editable DOCX</title>
 
-<!-- DOCX LIBS (WORK PERFECTLY ON GITHUB PAGES) -->
+<!-- REQUIRED LIBRARIES (WORK 100% ON GITHUB PAGES / NETLIFY) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.2.2/docx.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <style>
 body{
-  background:#020617;
-  font-family:system-ui;
-  color:#e5e7eb;
   margin:0;
+  background:#020617;
+  color:#e5e7eb;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont;
 }
 .wrap{
   max-width:1100px;
   margin:auto;
-  padding:30px;
+  padding:30px 16px 80px;
 }
 .card{
   background:#0b1220;
   border:1px solid rgba(255,255,255,.15);
-  border-radius:20px;
+  border-radius:22px;
   padding:24px;
 }
-h1{margin:0 0 20px}
+h1{margin:0 0 18px;font-size:26px}
+h2{margin:24px 0 10px;font-size:18px}
 label{
   display:block;
   font-size:13px;
   color:#9ca3af;
   margin-top:10px;
 }
-input,textarea{
+input,textarea,select{
   width:100%;
   padding:10px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,.15);
   background:#020617;
   color:#fff;
+  font-size:14px;
 }
-textarea{min-height:60px}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-td,th{
+textarea{resize:vertical;min-height:60px}
+.inline{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.inline label{
+  margin:0;
+  font-size:14px;
+  color:#e5e7eb;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+th,td{
   border:1px solid rgba(255,255,255,.2);
   padding:8px;
+  font-size:13px;
 }
-button{
-  margin-top:20px;
+.add-btn{
+  margin-top:10px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.2);
+  background:#020617;
+  color:#e5e7eb;
+  cursor:pointer;
+}
+.photo-row{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+}
+.photo-box{
+  width:132px;
+  text-align:center;
+}
+.photo-preview{
+  width:132px;
+  height:170px;
+  border:1px solid rgba(255,255,255,.3);
+  object-fit:cover;
+  background:#020617;
+  margin-bottom:8px;
+}
+.download-btn{
+  margin-top:28px;
   width:100%;
-  padding:16px;
+  padding:18px;
   border:none;
-  border-radius:16px;
+  border-radius:18px;
   background:linear-gradient(135deg,#38bdf8,#2563eb);
   color:#020617;
   font-weight:900;
@@ -65,89 +108,198 @@ button{
 <div class="wrap">
 <div class="card">
 
-<h1>Professional Resume Builder</h1>
+<div class="photo-row">
+  <h1>Professional Resume Builder</h1>
+  <div class="photo-box">
+    <img id="photoPreview" class="photo-preview">
+    <input type="file" accept="image/*" onchange="loadPhoto(event)">
+  </div>
+</div>
 
-<label>Full Name</label><input id="name">
+<h2>Personal Information</h2>
+<label>Full Name</label><input id="fullName">
+<label>Father Name</label><input id="fatherName">
+<label>Mother Name</label><input id="motherName">
+<label>Date of Birth</label><input type="date" id="dob">
+
+<label>Gender</label>
+<div class="inline">
+  <label><input type="radio" name="gender" value="Male"> Male</label>
+  <label><input type="radio" name="gender" value="Female"> Female</label>
+  <label><input type="radio" name="gender" value="Other"> Other</label>
+</div>
+
 <label>Email</label><input id="email">
 <label>Phone</label><input id="phone">
-<label>Father Name</label><input id="father">
-<label>Mother Name</label><input id="mother">
-<label>Date of Birth</label><input type="date" id="dob">
-<label>Address</label><textarea id="address"></textarea>
+<label>Permanent Address</label><textarea id="address"></textarea>
+<label>Mother Tongue</label><input id="motherTongue">
+<label>Nationality</label><input id="nationality" value="Indian">
 
-<h3>Education</h3>
-<table id="edu">
-<tr><th>Course</th><th>University</th><th>Year</th><th>Result</th></tr>
-<tr>
-<td><input></td><td><input></td><td><input></td><td><input></td>
-</tr>
-</table>
+<label>Marital Status</label>
+<select id="marital">
+  <option>Single</option>
+  <option>Married</option>
+</select>
 
-<button onclick="addRow()">Add Education Row</button>
+<label>Languages Known</label>
+<div class="inline">
+  <label><input type="checkbox" class="lang" value="English"> English</label>
+  <label><input type="checkbox" class="lang" value="Hindi"> Hindi</label>
+  <label><input type="checkbox" class="lang" value="Kannada"> Kannada</label>
+  <label><input type="checkbox" class="lang" value="Telugu"> Telugu</label>
+  <label><input type="checkbox" class="lang" value="Tamil"> Tamil</label>
+</div>
 
-<label>Career Objective</label>
+<label>Hobbies</label>
+<div class="inline">
+  <label><input type="checkbox" class="hob" value="Reading"> Reading</label>
+  <label><input type="checkbox" class="hob" value="Sports"> Sports</label>
+  <label><input type="checkbox" class="hob" value="Music"> Music</label>
+  <label><input type="checkbox" class="hob" value="Travelling"> Travelling</label>
+</div>
+
+<h2>Career Objective</h2>
 <textarea id="objective"></textarea>
 
-<label>Skills (one per line)</label>
-<textarea id="skills"></textarea>
+<h2>Educational Qualification</h2>
+<table id="educationTable">
+<thead>
+<tr>
+<th>Course</th>
+<th>Board / University</th>
+<th>Institution</th>
+<th>Year</th>
+<th>Percentage / CGPA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+</tr>
+</tbody>
+</table>
+<button class="add-btn" onclick="addEduRow()">+ Add Education Row</button>
 
-<button onclick="downloadDoc()">Download Editable Resume (DOCX)</button>
+<h2>Skills</h2>
+<label>Technical / Domain Skills (one per line)</label>
+<textarea id="techSkills"></textarea>
+<label>Software / Tools</label><input id="software">
+<label>Operating Systems</label><input id="os">
+<label>Databases</label><input id="db">
+<label>Personal / Soft Skills</label><textarea id="personalSkills"></textarea>
+
+<h2>Experience / Internship / Training</h2>
+<textarea id="experience"></textarea>
+
+<h2>Declaration</h2>
+<textarea id="declaration">
+I hereby declare that the above information is true and correct to the best of my knowledge.
+</textarea>
+
+<label>Place</label><input id="place">
+<label>Date</label><input type="date" id="date">
+<label>Signature (Name)</label><input id="signature">
+
+<button class="download-btn" onclick="generateDOCX()">
+Download Editable Resume (DOCX)
+</button>
 
 </div>
 </div>
 
 <script>
-function addRow(){
-  const t=document.getElementById("edu");
-  const r=t.insertRow();
-  for(let i=0;i<4;i++){
-    r.insertCell().innerHTML="<input>";
-  }
+function addEduRow(){
+  const t=document.querySelector("#educationTable tbody");
+  const r=document.createElement("tr");
+  r.innerHTML="<td><input></td><td><input></td><td><input></td><td><input></td><td><input></td>";
+  t.appendChild(r);
 }
 
-function downloadDoc(){
-  const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell}=docx;
+function loadPhoto(e){
+  const r=new FileReader();
+  r.onload=()=>document.getElementById("photoPreview").src=r.result;
+  r.readAsDataURL(e.target.files[0]);
+}
 
-  const rows=[
+function generateDOCX(){
+  const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType}=docx;
+
+  const gender=document.querySelector('input[name="gender"]:checked')?.value||"";
+  const langs=[...document.querySelectorAll(".lang:checked")].map(x=>x.value).join(", ");
+
+  const eduRows=[
     new TableRow({
-      children:["Course","University","Year","Result"].map(h=>
-        new TableCell({children:[new Paragraph({children:[new TextRun({text:h,bold:true})]})]})
-      )
+      children:["Course","University","Institution","Year","Result"]
+      .map(h=>new TableCell({
+        children:[new Paragraph({children:[new TextRun({text:h,bold:true})]})]
+      }))
     })
   ];
 
-  [...document.querySelectorAll("#edu tr")].slice(1).forEach(tr=>{
-    const v=[...tr.querySelectorAll("input")].map(i=>i.value);
-    if(v.join("")) rows.push(
-      new TableRow({
-        children:v.map(x=>new TableCell({children:[new Paragraph(x)]}))
-      })
-    );
+  document.querySelectorAll("#educationTable tbody tr").forEach(r=>{
+    const v=[...r.querySelectorAll("input")].map(i=>i.value);
+    if(v.join("").trim()){
+      eduRows.push(
+        new TableRow({
+          children:v.map(x=>new TableCell({children:[new Paragraph(x)]}))
+        })
+      );
+    }
   });
 
   const doc=new Document({
     sections:[{
       children:[
-        new Paragraph({alignment:"center",children:[new TextRun({text:name.value,bold:true,size:32})]}),
+        new Paragraph({
+          alignment:"center",
+          children:[new TextRun({text:fullName.value.toUpperCase(),bold:true,size:32})]
+        }),
         new Paragraph({alignment:"center",text:email.value+" | "+phone.value}),
-        new Paragraph("Father: "+father.value),
-        new Paragraph("Mother: "+mother.value),
-        new Paragraph("DOB: "+dob.value),
-        new Paragraph("Address: "+address.value),
+
+        new Paragraph("PERSONAL DETAILS"),
+        new Paragraph("Father Name : "+fatherName.value),
+        new Paragraph("Mother Name : "+motherName.value),
+        new Paragraph("Date of Birth : "+dob.value),
+        new Paragraph("Gender : "+gender),
+        new Paragraph("Nationality : "+nationality.value),
+        new Paragraph("Marital Status : "+marital.value),
+        new Paragraph("Mother Tongue : "+motherTongue.value),
+        new Paragraph("Languages Known : "+langs),
+        new Paragraph("Address : "+address.value),
 
         new Paragraph("CAREER OBJECTIVE"),
         new Paragraph(objective.value),
 
-        new Paragraph("EDUCATION"),
-        new Table({rows}),
+        new Paragraph("EDUCATIONAL QUALIFICATION"),
+        new Table({rows:eduRows,width:{size:100,type:WidthType.PERCENTAGE}}),
 
         new Paragraph("SKILLS"),
-        ...skills.value.split("\n").filter(x=>x).map(x=>new Paragraph("• "+x))
+        ...techSkills.value.split("\n").filter(x=>x.trim()).map(x=>new Paragraph("• "+x)),
+        new Paragraph("Software / Tools : "+software.value),
+        new Paragraph("Operating Systems : "+os.value),
+        new Paragraph("Databases : "+db.value),
+
+        new Paragraph("PERSONAL / SOFT SKILLS"),
+        ...personalSkills.value.split("\n").filter(x=>x.trim()).map(x=>new Paragraph("• "+x)),
+
+        new Paragraph("EXPERIENCE / TRAINING"),
+        new Paragraph(experience.value),
+
+        new Paragraph("DECLARATION"),
+        new Paragraph(declaration.value),
+
+        new Paragraph("Place : "+place.value),
+        new Paragraph("Date : "+date.value),
+        new Paragraph("Signature : "+signature.value)
       ]
     }]
   });
 
-  Packer.toBlob(doc).then(b=>saveAs(b,"Resume.docx"));
+  Packer.toBlob(doc).then(b=>saveAs(b,(fullName.value||"Resume")+".docx"));
 }
 </script>
 
