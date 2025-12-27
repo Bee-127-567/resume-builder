@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Professional Resume Builder</title>
+
+<!-- DOCX LIBS (WORK PERFECTLY ON GITHUB PAGES) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.2.2/docx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<style>
+body{
+  background:#020617;
+  font-family:system-ui;
+  color:#e5e7eb;
+  margin:0;
+}
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  padding:30px;
+}
+.card{
+  background:#0b1220;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:20px;
+  padding:24px;
+}
+h1{margin:0 0 20px}
+label{
+  display:block;
+  font-size:13px;
+  color:#9ca3af;
+  margin-top:10px;
+}
+input,textarea{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.15);
+  background:#020617;
+  color:#fff;
+}
+textarea{min-height:60px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+td,th{
+  border:1px solid rgba(255,255,255,.2);
+  padding:8px;
+}
+button{
+  margin-top:20px;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(135deg,#38bdf8,#2563eb);
+  color:#020617;
+  font-weight:900;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="card">
+
+<h1>Professional Resume Builder</h1>
+
+<label>Full Name</label><input id="name">
+<label>Email</label><input id="email">
+<label>Phone</label><input id="phone">
+<label>Father Name</label><input id="father">
+<label>Mother Name</label><input id="mother">
+<label>Date of Birth</label><input type="date" id="dob">
+<label>Address</label><textarea id="address"></textarea>
+
+<h3>Education</h3>
+<table id="edu">
+<tr><th>Course</th><th>University</th><th>Year</th><th>Result</th></tr>
+<tr>
+<td><input></td><td><input></td><td><input></td><td><input></td>
+</tr>
+</table>
+
+<button onclick="addRow()">Add Education Row</button>
+
+<label>Career Objective</label>
+<textarea id="objective"></textarea>
+
+<label>Skills (one per line)</label>
+<textarea id="skills"></textarea>
+
+<button onclick="downloadDoc()">Download Editable Resume (DOCX)</button>
+
+</div>
+</div>
+
+<script>
+function addRow(){
+  const t=document.getElementById("edu");
+  const r=t.insertRow();
+  for(let i=0;i<4;i++){
+    r.insertCell().innerHTML="<input>";
+  }
+}
+
+function downloadDoc(){
+  const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell}=docx;
+
+  const rows=[
+    new TableRow({
+      children:["Course","University","Year","Result"].map(h=>
+        new TableCell({children:[new Paragraph({children:[new TextRun({text:h,bold:true})]})]})
+      )
+    })
+  ];
+
+  [...document.querySelectorAll("#edu tr")].slice(1).forEach(tr=>{
+    const v=[...tr.querySelectorAll("input")].map(i=>i.value);
+    if(v.join("")) rows.push(
+      new TableRow({
+        children:v.map(x=>new TableCell({children:[new Paragraph(x)]}))
+      })
+    );
+  });
+
+  const doc=new Document({
+    sections:[{
+      children:[
+        new Paragraph({alignment:"center",children:[new TextRun({text:name.value,bold:true,size:32})]}),
+        new Paragraph({alignment:"center",text:email.value+" | "+phone.value}),
+        new Paragraph("Father: "+father.value),
+        new Paragraph("Mother: "+mother.value),
+        new Paragraph("DOB: "+dob.value),
+        new Paragraph("Address: "+address.value),
+
+        new Paragraph("CAREER OBJECTIVE"),
+        new Paragraph(objective.value),
+
+        new Paragraph("EDUCATION"),
+        new Table({rows}),
+
+        new Paragraph("SKILLS"),
+        ...skills.value.split("\n").filter(x=>x).map(x=>new Paragraph("• "+x))
+      ]
+    }]
+  });
+
+  Packer.toBlob(doc).then(b=>saveAs(b,"Resume.docx"));
+}
+</script>
+
+</body>
+</html>
